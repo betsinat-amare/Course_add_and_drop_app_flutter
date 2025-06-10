@@ -5,18 +5,15 @@ import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
 import multer from 'multer';
 import path from 'path';
-// import { AuthenticatedRequest } from '../types'; // Remove this if you define AuthenticatedRequest here
-// If AuthenticatedRequest is in '../types', ensure it's compatible with the interface below
 
 const router = Router();
 
-// Extend Request to include the user property
-// If you have this defined in '../types', make sure it matches
+
 interface AuthenticatedRequest extends Request {
     user?: { id: number; role: string };
 }
 
-// JWT Secret - Use environment variable in production
+
 const JWT_SECRET = process.env.JWT_SECRET || 'course_add_and_drop';
 
 // Authentication Middleware
@@ -35,8 +32,8 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
             }
             return res.status(403).json({ error: 'Invalid token' });
         }
-        req.user = user; // Attach the decoded user payload to the request
-        next(); // Proceed to the next middleware or route handler
+        req.user = user; /
+        next(); 
     });
 };
 
