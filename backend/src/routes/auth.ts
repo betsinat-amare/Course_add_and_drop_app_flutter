@@ -1,13 +1,44 @@
-import { Router, Response, NextFunction } from 'express';
+import { Router, Response, NextFunction, Request } from 'express'; // Added Request
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
 import multer from 'multer';
 import path from 'path';
-import { AuthenticatedRequest } from '../types';
+// import { AuthenticatedRequest } from '../types'; // Remove this if you define AuthenticatedRequest here
+// If AuthenticatedRequest is in '../types', ensure it's compatible with the interface below
 
 const router = Router();
+
+// Extend Request to include the user property
+// If you have this defined in '../types', make sure it matches
+interface AuthenticatedRequest extends Request {
+    user?: { id: number; role: string };
+}
+
+// JWT Secret - Use environment variable in production
+const JWT_SECRET = process.env.JWT_SECRET || 'course_add_and_drop';
+
+// Authentication Middleware
+const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Expects "Bearer TOKEN"
+
+    if (token == null) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
+        if (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ error: 'Session expired' });
+            }
+            return res.status(403).json({ error: 'Invalid token' });
+        }
+        req.user = user; // Attach the decoded user payload to the request
+        next(); // Proceed to the next middleware or route handler
+    });
+};
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -141,21 +172,23 @@ router.post('/login', [
 
         const token = jwt.sign(
             { id: user.id, role: user.role },
-            process.env.JWT_SECRET || 'course_add_and_drop',
+            JWT_SECRET, // Use the defined JWT_SECRET
             { expiresIn: '1h' }
         );
 
         db.close();
-        res.status(200).json({ token });
+        res.status(200).json({ token, role: user.role, username: user.username }); // Added role and username to login response
     });
 });
-router.get('/profile', async (req: AuthenticatedRequest, res: Response) => {
+
+// Apply authenticateToken middleware to the GET /profile route
+router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
-    if (!userId){
+    if (!userId){ // This check should ideally not be hit if middleware works
         db.close();
         return res.status(401).json({ error:'Unauthorized' });
-}
+    }
 
     db.get('SELECT * FROM users WHERE id = ?', [userId], (err, user: any) => {
         if (err) {
@@ -167,23 +200,36 @@ router.get('/profile', async (req: AuthenticatedRequest, res: Response) => {
             return res.status(404).json({ error: 'User not found' });
         }
         db.close();
+        // Send the full user object, including full_name, email, and profile_photo
         res.status(200).json(user);
     });
 });
-router.put('/profile', optionalUpload, async (req: AuthenticatedRequest, res: Response) => {
+
+// Apply authenticateToken middleware to the PUT /profile route
+router.put('/profile', authenticateToken, optionalUpload, async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
-    if (!userId){
+    if (!userId){ // This check should ideally not be hit if middleware works
         db.close();
         return res.status(401).json({ error:'Unauthorized' });
-}
+    }
 
-    const { full_name, username, email } = req.body;
+    const { full_name, username, email, newPassword } = req.body; // Added 'newPassword' from frontend
     const profile_photo = req.file ? req.file.path : null;
 
+    let updateQuery = 'UPDATE users SET full_name = ?, username = ?, email = ?, profile_photo = ? WHERE id = ?';
+    let updateParams: (string | null)[] = [full_name, username, email, profile_photo, userId];
+
+    if (newPassword && newPassword.isNotEmpty) { // Check for newPassword and hash it
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        updateQuery = 'UPDATE users SET full_name = ?, username = ?, email = ?, profile_photo = ?, password = ? WHERE id = ?';
+        updateParams = [full_name, username, email, profile_photo, hashedPassword, userId];
+    }
+
+
     db.run(
-        'UPDATE users SET full_name = ?, username = ?, email = ?, profile_photo = ? WHERE id = ?',
-        [full_name, username, email, profile_photo, userId],
+        updateQuery,
+        updateParams,
         (err) => {
             if (err) {
                 db.close();
@@ -194,13 +240,15 @@ router.put('/profile', optionalUpload, async (req: AuthenticatedRequest, res: Re
         }
     );
 });
-router.delete('/profile', async (req: AuthenticatedRequest, res: Response) => {
+
+// Apply authenticateToken middleware to the DELETE /profile route
+router.delete('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
     if (!userId){
         db.close();
         return res.status(401).json({ error:'Unauthorized' });
-}
+    }
 
     db.run('DELETE FROM users WHERE id = ?', [userId], (err) => {
         if (err) {
@@ -211,7 +259,9 @@ router.delete('/profile', async (req: AuthenticatedRequest, res: Response) => {
         res.status(200).json({ message: 'Profile deleted successfully' });
     });
 });
-router.get('/logout', async (req: AuthenticatedRequest, res: Response) => {
+
+// Apply authenticateToken middleware to the GET /logout route
+router.get('/logout', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
     const db =new sqlite3.Database('./college.db');
     const userId =req.user?.id;
     if (!userId){
@@ -232,4 +282,5 @@ router.get('/logout', async (req: AuthenticatedRequest, res: Response) => {
         res.status(200).json({ message: 'Logged out successfully' });
     });
 });
+
 export default router;
