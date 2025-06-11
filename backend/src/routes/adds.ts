@@ -1,13 +1,14 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import sqlite3 from 'sqlite3';
 import { authenticate, restrictTo } from '../middleware/auth';
 import { AuthenticatedRequest } from '../types';
+import type { RequestHandler } from 'express';
 
 const router = Router();
 
-router.use(authenticate);
+router.use(authenticate as RequestHandler);
 
-router.post('/', restrictTo('Student'), async (req: AuthenticatedRequest, res) => {
+router.post('/', restrictTo('Student') as RequestHandler, (async (req: AuthenticatedRequest, res: Response) => {
     const { course_id } = req.body;
     const student_id = req.user!.id;
 
@@ -35,9 +36,9 @@ router.post('/', restrictTo('Student'), async (req: AuthenticatedRequest, res) =
             }
         );
     });
-});
+}) as RequestHandler);
 
-router.put('/:id', restrictTo('Registrar'), async (req: AuthenticatedRequest, res) => {
+router.put('/:id', restrictTo('Registrar') as RequestHandler, (async (req: AuthenticatedRequest, res: Response) => {
     const { id } = req.params;
     const { approval_status } = req.body;
 
@@ -107,9 +108,9 @@ router.put('/:id', restrictTo('Registrar'), async (req: AuthenticatedRequest, re
             );
         }
     });
-});
+}) as RequestHandler);
 
-router.delete('/:id', restrictTo('Student'), async (req: AuthenticatedRequest, res) => {
+router.delete('/:id', restrictTo('Student') as RequestHandler, (async (req: AuthenticatedRequest, res: Response) => {
     const { id } = req.params;
 
     const db = new sqlite3.Database('./college.db');
@@ -128,7 +129,7 @@ router.delete('/:id', restrictTo('Student'), async (req: AuthenticatedRequest, r
             res.status(200).json({ message: 'Add deleted' });
         });
     });
-});
+}) as RequestHandler);
 
 router.get('/', async (req: AuthenticatedRequest, res) => {
     const db = new sqlite3.Database('./college.db');

@@ -1,4 +1,4 @@
-import { Router, Response, NextFunction, Request } from 'express'; // Added Request
+import { Router, Response, NextFunction, Request, RequestHandler } from 'express'; // Added Request
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -18,7 +18,7 @@ interface AuthenticatedRequest extends Request {
 const JWT_SECRET = process.env.JWT_SECRET || 'course_add_and_drop';
 
 // Authentication Middleware
-const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authenticateToken = ((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Expects "Bearer TOKEN"
 
@@ -36,7 +36,7 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
         req.user = user; // Attach the decoded user payload to the request
         next(); // Proceed to the next middleware or route handler
     });
-};
+}) as RequestHandler;
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -64,7 +64,7 @@ const upload = multer({
 });
 
 
-const optionalUpload = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const optionalUpload = ((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     upload.single('profile_photo')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             return res.status(400).json({ error: err.message });
@@ -74,7 +74,7 @@ const optionalUpload = (req: AuthenticatedRequest, res: Response, next: NextFunc
       
         next();
     });
-};
+}) as RequestHandler;
 
 router.post('/signup', optionalUpload, [
     check('id').isInt().withMessage('ID must be an integer'),
@@ -83,7 +83,7 @@ router.post('/signup', optionalUpload, [
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
     check('email').isEmail().withMessage('Valid email is required'),
     check('role').isIn(['Student', 'Registrar']).withMessage('Role must be Student or Registrar')
-], async (req: AuthenticatedRequest, res: Response) => {
+], (async (req: AuthenticatedRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -137,12 +137,12 @@ router.post('/signup', optionalUpload, [
             );
         });
     });
-});
+}) as RequestHandler);
 
 router.post('/login', [
     check('username').notEmpty().withMessage('Username is required'),
     check('password').notEmpty().withMessage('Password is required')
-], async (req: AuthenticatedRequest, res: Response) => {
+], (async (req: AuthenticatedRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -177,10 +177,10 @@ router.post('/login', [
         db.close();
         res.status(200).json({ token, role: user.role, username: user.username }); // Added role and username to login response
     });
-});
+}) as RequestHandler);
 
 // Apply authenticateToken middleware to the GET /profile route
-router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/profile', authenticateToken, (async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
     if (!userId){ // This check should ideally not be hit if middleware works
@@ -201,10 +201,10 @@ router.get('/profile', authenticateToken, async (req: AuthenticatedRequest, res:
         // Send the full user object, including full_name, email, and profile_photo
         res.status(200).json(user);
     });
-});
+}) as RequestHandler);
 
 // Apply authenticateToken middleware to the PUT /profile route
-router.put('/profile', authenticateToken, optionalUpload, async (req: AuthenticatedRequest, res: Response) => {
+router.put('/profile', authenticateToken, optionalUpload, (async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
     if (!userId){ // This check should ideally not be hit if middleware works
@@ -237,10 +237,10 @@ router.put('/profile', authenticateToken, optionalUpload, async (req: Authentica
             res.status(200).json({ message: 'Profile updated successfully' });
         }
     );
-});
+}) as RequestHandler);
 
 // Apply authenticateToken middleware to the DELETE /profile route
-router.delete('/profile', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.delete('/profile', authenticateToken, (async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
     const userId = req.user?.id;
     if (!userId){
@@ -256,10 +256,10 @@ router.delete('/profile', authenticateToken, async (req: AuthenticatedRequest, r
         db.close();
         res.status(200).json({ message: 'Profile deleted successfully' });
     });
-});
+}) as RequestHandler);
 
 // Apply authenticateToken middleware to the GET /logout route
-router.get('/logout', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/logout', authenticateToken, (async (req: AuthenticatedRequest, res: Response) => {
     const db =new sqlite3.Database('./college.db');
     const userId =req.user?.id;
     if (!userId){
@@ -279,6 +279,6 @@ router.get('/logout', authenticateToken, async (req: AuthenticatedRequest, res: 
         db.close();
         res.status(200).json({ message: 'Logged out successfully' });
     });
-});
+}) as RequestHandler);
 
 export default router;

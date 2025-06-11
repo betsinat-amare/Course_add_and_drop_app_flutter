@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth';
-import coursesRoutes from './routes/courses';
+import coursesRoutes from './routes/course';
 import addsRoutes from './routes/adds';
 import dropsRoutes from './routes/drops';
 

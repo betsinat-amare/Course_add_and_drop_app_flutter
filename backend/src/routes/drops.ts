@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, RequestHandler } from 'express';
 import sqlite3 from 'sqlite3';
 import { authenticate } from '../middleware/auth';
 import { check, validationResult } from 'express-validator';
@@ -6,11 +6,11 @@ import { AuthenticatedRequest } from '../types';
 
 const router = Router();
 
-router.use(authenticate);
+router.use(authenticate as RequestHandler);
 
 router.post('/', [
     check('add_id').isInt().withMessage('Add ID must be an integer')
-], async (req: AuthenticatedRequest, res: Response) => {
+], (async (req: AuthenticatedRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -72,11 +72,11 @@ router.post('/', [
             );
         }
     );
-});
+}) as RequestHandler);
 
 router.put('/:id', [
     check('approval_status').isIn(['approved', 'rejected']).withMessage('Invalid approval status')
-], async (req: AuthenticatedRequest, res: Response) => {
+], (async (req: AuthenticatedRequest, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -114,9 +114,9 @@ router.put('/:id', [
             }
         );
     });
-});
+}) as RequestHandler);
 
-router.get('/', async (req: AuthenticatedRequest, res: Response) => {
+router.get('/', (async (req: AuthenticatedRequest, res: Response) => {
     const db = new sqlite3.Database('./college.db');
 
     if (req.user!.role === 'Student') {
@@ -142,6 +142,6 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
             res.status(200).json(drops);
         });
     }
-});
+}) as RequestHandler);
 
 export default router;
