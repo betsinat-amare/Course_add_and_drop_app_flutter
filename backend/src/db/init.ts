@@ -68,6 +68,30 @@ db.serialize(() => {
     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [6, 'Registrar', 0]);
     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [7, 'Student', 0]);
     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [8, 'Student', 0]);
+     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [9, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [10, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [11, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [12, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [13, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [14, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [15, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [16, 'Student', 0]);
+     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [17, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [18, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [19, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [20, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [21, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [22, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [23, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [24, 'Student', 0]);
+     db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [25, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [27, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [28, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [29, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [30, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [31, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [31, 'Student', 0]);
+    db.run('INSERT OR IGNORE INTO ids (id, role, assigned) VALUES (?, ?, ?)', [32, 'Student', 0]);
 
     const hashedPassword = bcrypt.hashSync('password123', 10);
     db.run(

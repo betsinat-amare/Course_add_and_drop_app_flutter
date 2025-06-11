@@ -18,7 +18,8 @@ router.post('/', restrictTo('Registrar'), [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-const { title, code, description, credit_hours } = req.body;
+
+    const { title, code, description, credit_hours } = req.body;
     const db = new sqlite3.Database('./college.db');
 
     db.get('SELECT * FROM courses WHERE code = ?', [code], (err, course: any) => {

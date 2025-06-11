@@ -48,9 +48,7 @@ class DropDownEditComponent extends StatefulWidget {
     required this.options,
     required this.selectedValue,
     required this.onValueSelected,
-    this.focusedDropdownBg = const Color(
-      0xFFE0E0E0,
-    ), // Assuming colorGrayBackground
+    this.focusedDropdownBg = const Color(0xFFE0E0E0), // Assuming colorGrayBackground
   }) : super(key: key);
 
   @override
@@ -76,10 +74,7 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
             width: 100,
             decoration: BoxDecoration(
               color: Colors.white, // Assuming colorTextField
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
-              ), // Assuming colorTextField
+              border: Border.all(color: Colors.white, width: 1), // Assuming colorTextField
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -88,9 +83,7 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Text(
-                    widget.selectedValue.isEmpty
-                        ? widget.label
-                        : widget.selectedValue,
+                    widget.selectedValue.isEmpty ? widget.label : widget.selectedValue,
                     textAlign: TextAlign.end,
                     style: const TextStyle(color: Colors.black),
                   ),
@@ -113,19 +106,18 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
-              children:
-                  widget.options.map((item) {
-                    return ListTile(
-                      title: Text(item),
-                      tileColor: Colors.blue, // Assuming colorPrimary
-                      onTap: () {
-                        widget.onValueSelected(item);
-                        setState(() {
-                          _expanded = false;
-                        });
-                      },
-                    );
-                  }).toList(),
+              children: widget.options.map((item) {
+                return ListTile(
+                  title: Text(item),
+                  tileColor: Colors.blue, // Assuming colorPrimary
+                  onTap: () {
+                    widget.onValueSelected(item);
+                    setState(() {
+                      _expanded = false;
+                    });
+                  },
+                );
+              }).toList(),
             ),
           ),
       ],
@@ -157,13 +149,15 @@ class ProfileImagePlaceholder extends StatelessWidget {
               color: Colors.grey,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.person, color: Colors.white, size: 60),
+            child: const Icon(
+              Icons.person,
+              color: Colors.white,
+              size: 60,
+            ),
           ),
         ),
         const SizedBox(height: 8),
-        const NormalTextComponent(
-          value: 'Welcome',
-        ), // Assuming R.string.welcomef
+        const NormalTextComponent(value: 'Welcome'), // Assuming R.string.welcomef
       ],
     );
   }
@@ -188,7 +182,10 @@ class ProfileImgPlaceholder extends StatelessWidget {
         child: Container(
           width: 50,
           height: 50,
-          decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            shape: BoxShape.circle,
+          ),
           child: const Icon(
             Icons.person,
             color: Colors.white,
@@ -235,7 +232,11 @@ class _ProfileEditPlaceholderState extends State<ProfileEditPlaceholder> {
                 color: Colors.grey,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.person, color: Colors.white, size: 40),
+              child: const Icon(
+                Icons.person,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
           ),
           const SizedBox(height: 10),

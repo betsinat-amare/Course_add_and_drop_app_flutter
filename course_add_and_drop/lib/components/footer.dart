@@ -26,14 +26,8 @@ class Footer extends StatelessWidget {
       onTap: (index) => onItemSelected(_indexToScreen(index)),
       selectedItemColor: const Color(0xFF655BEC), // Selected color
       unselectedItemColor: const Color(0xFF5D6677), // Unselected color
-      selectedLabelStyle: const TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 14,
-      ),
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home, size: 30),
@@ -102,14 +96,8 @@ class FooterAdmin extends StatelessWidget {
       onTap: (index) => onItemSelected(_indexToScreen(index)),
       selectedItemColor: const Color(0xFF655BEC),
       unselectedItemColor: const Color(0xFF5D6677),
-      selectedLabelStyle: const TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 14,
-      ),
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home, size: 30),

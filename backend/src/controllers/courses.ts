@@ -17,7 +17,7 @@ export const createCourse = (req: CreateCourseRequest, res: Response): void => {
                 return;
             }
             res.status(201).json({ id: this.lastID });
-              }
+        }
     );
 };
 
