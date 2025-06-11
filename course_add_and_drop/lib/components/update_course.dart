@@ -76,12 +76,8 @@ class _UpdateCourseDialogState extends State<_UpdateCourseDialog> {
     super.initState();
     _titleController = TextEditingController(text: widget.course.title);
     _codeController = TextEditingController(text: widget.course.code);
-    _descriptionController = TextEditingController(
-      text: widget.course.description,
-    );
-    _creditHoursController = TextEditingController(
-      text: widget.course.creditHours,
-    );
+    _descriptionController = TextEditingController(text: widget.course.description);
+    _creditHoursController = TextEditingController(text: widget.course.creditHours);
   }
 
   @override
@@ -141,7 +137,10 @@ class _UpdateCourseDialogState extends State<_UpdateCourseDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: widget.onDismiss, child: const Text('Cancel')),
+        TextButton(
+          onPressed: widget.onDismiss,
+          child: const Text('Cancel'),
+        ),
         TextButton(
           onPressed: () {
             widget.onSubmit(

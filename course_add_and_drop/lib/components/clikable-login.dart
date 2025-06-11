@@ -9,7 +9,13 @@ class ClickableLoginTextComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTextSelected,
-      child: const Text('Sign Up', style: TextStyle(color: Color(0xFF3B82F6))),
+      child: const Text(
+        'Sign Up',
+        style: TextStyle(
+          color: Color(0xFF3B82F6),
+         
+        ),
+      ),
     );
   }
 }

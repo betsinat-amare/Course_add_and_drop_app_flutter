@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum Screen { home, addCourse, dropCourse, dashboard }
+enum Screen {
+  home,
+  addCourse,
+  dropCourse,
+  dashboard
+}
 
 class FooterComponent extends StatelessWidget {
   final Screen currentScreen;
@@ -93,7 +98,10 @@ class _FooterItem extends StatelessWidget {
                   color: const Color(0xFFD0D7FF),
                   borderRadius: BorderRadius.circular(8),
                   border: addBorder
-                      ? Border.all(color: const Color(0xFF3B82F6), width: 1.5)
+                      ? Border.all(
+                          color: const Color(0xFF3B82F6),
+                          width: 1.5,
+                        )
                       : null,
                 )
               : null,
@@ -119,4 +127,4 @@ class _FooterItem extends StatelessWidget {
       ),
     );
   }
-}
+} 

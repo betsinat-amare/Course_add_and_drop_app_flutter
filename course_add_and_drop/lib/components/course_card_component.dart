@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/add_drop_component.dart' as add_drop_components;
-import '../../components/button_component.dart'
-    as button; // Assuming you might use your main button component elsewhere, though the card button is custom styled
+import '../../components/button_component.dart' as button; // Assuming you might use your main button component elsewhere, though the card button is custom styled
 import '../theme/app_colors.dart';
 import 'text.dart' as text;
 
@@ -47,10 +46,7 @@ class CourseCardComponent extends StatelessWidget {
                   children: [
                     if (onEdit != null)
                       IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: AppColors.colorPrimary,
-                        ),
+                        icon: const Icon(Icons.edit, color: AppColors.colorPrimary),
                         onPressed: onEdit,
                       ),
                     if (onDelete != null)
@@ -93,4 +89,4 @@ class CourseCardComponent extends StatelessWidget {
       ),
     );
   }
-}
+} 

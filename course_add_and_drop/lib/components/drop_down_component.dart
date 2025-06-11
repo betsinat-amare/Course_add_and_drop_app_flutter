@@ -28,38 +28,31 @@ class _DropDownComponentState extends State<DropDownComponent> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: DropdownButtonFormField<String>(
-        value:
-            widget.options.contains(widget.selectedValue)
-                ? widget.selectedValue
-                : null,
+        value: widget.options.contains(widget.selectedValue) ? widget.selectedValue : null,
         onChanged: (value) {
           if (value != null) {
             widget.onValueSelected(value);
           }
         },
-        items:
-            widget.options.map((item) {
-              return DropdownMenuItem<String>(value: item, child: Text(item));
-            }).toList(),
+        items: widget.options.map((item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(item),
+          );
+        }).toList(),
         decoration: InputDecoration(
           labelText: widget.label,
           filled: true,
           fillColor: widget.textFieldBgColor,
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.blue,
-            ), // Assuming colorPrimary
+            borderSide: const BorderSide(color: Colors.blue), // Assuming colorPrimary
             borderRadius: BorderRadius.circular(12),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.white,
-            ), // Assuming colorTextField
+            borderSide: const BorderSide(color: Colors.white), // Assuming colorTextField
             borderRadius: BorderRadius.circular(12),
           ),
-          labelStyle: const TextStyle(
-            color: Colors.blue,
-          ), // Assuming colorPrimary
+          labelStyle: const TextStyle(color: Colors.blue), // Assuming colorPrimary
         ),
         icon: const Icon(Icons.arrow_drop_down),
         dropdownColor: widget.focusedDropdownBg,
@@ -81,18 +74,14 @@ class DropDownCenteredRowComponent extends StatefulWidget {
     required this.options,
     required this.selectedValue,
     required this.onValueSelected,
-    this.focusedDropdownBg = const Color(
-      0xFFE0E0E0,
-    ), // Assuming colorGrayBackground
+    this.focusedDropdownBg = const Color(0xFFE0E0E0), // Assuming colorGrayBackground
   }) : super(key: key);
 
   @override
-  _DropDownCenteredRowComponentState createState() =>
-      _DropDownCenteredRowComponentState();
+  _DropDownCenteredRowComponentState createState() => _DropDownCenteredRowComponentState();
 }
 
-class _DropDownCenteredRowComponentState
-    extends State<DropDownCenteredRowComponent> {
+class _DropDownCenteredRowComponentState extends State<DropDownCenteredRowComponent> {
   bool _expanded = false;
 
   @override
@@ -141,19 +130,18 @@ class _DropDownCenteredRowComponentState
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Column(
-                children:
-                    widget.options.map((item) {
-                      return ListTile(
-                        title: Text(item),
-                        tileColor: Colors.blue, // Assuming colorPrimary
-                        onTap: () {
-                          widget.onValueSelected(item);
-                          setState(() {
-                            _expanded = false;
-                          });
-                        },
-                      );
-                    }).toList(),
+                children: widget.options.map((item) {
+                  return ListTile(
+                    title: Text(item),
+                    tileColor: Colors.blue, // Assuming colorPrimary
+                    onTap: () {
+                      widget.onValueSelected(item);
+                      setState(() {
+                        _expanded = false;
+                      });
+                    },
+                  );
+                }).toList(),
               ),
             ),
         ],
@@ -175,9 +163,7 @@ class DropDownEditComponent extends StatefulWidget {
     required this.options,
     required this.selectedValue,
     required this.onValueSelected,
-    this.focusedDropdownBg = const Color(
-      0xFFE0E0E0,
-    ), // Assuming colorGrayBackground
+    this.focusedDropdownBg = const Color(0xFFE0E0E0), // Assuming colorGrayBackground
   }) : super(key: key);
 
   @override
@@ -203,10 +189,7 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
             width: 100,
             decoration: BoxDecoration(
               color: Colors.white, // Assuming colorTextField
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
-              ), // Assuming colorTextField
+              border: Border.all(color: Colors.white, width: 1), // Assuming colorTextField
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -215,9 +198,7 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Text(
-                    widget.selectedValue.isEmpty
-                        ? widget.label
-                        : widget.selectedValue,
+                    widget.selectedValue.isEmpty ? widget.label : widget.selectedValue,
                     textAlign: TextAlign.end,
                     style: const TextStyle(color: Colors.black),
                   ),
@@ -240,19 +221,18 @@ class _DropDownEditComponentState extends State<DropDownEditComponent> {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Column(
-              children:
-                  widget.options.map((item) {
-                    return ListTile(
-                      title: Text(item),
-                      tileColor: Colors.blue, // Assuming colorPrimary
-                      onTap: () {
-                        widget.onValueSelected(item);
-                        setState(() {
-                          _expanded = false;
-                        });
-                      },
-                    );
-                  }).toList(),
+              children: widget.options.map((item) {
+                return ListTile(
+                  title: Text(item),
+                  tileColor: Colors.blue, // Assuming colorPrimary
+                  onTap: () {
+                    widget.onValueSelected(item);
+                    setState(() {
+                      _expanded = false;
+                    });
+                  },
+                );
+              }).toList(),
             ),
           ),
       ],

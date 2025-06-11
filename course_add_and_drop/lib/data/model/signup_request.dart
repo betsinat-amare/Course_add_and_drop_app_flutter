@@ -15,6 +15,5 @@ class SignupRequest with _$SignupRequest {
     String? profilePhoto,
   }) = _SignupRequest;
 
-  factory SignupRequest.fromJson(Map<String, dynamic> json) =>
-      _$SignupRequestFromJson(json);
+  factory SignupRequest.fromJson(Map<String, dynamic> json) => _$SignupRequestFromJson(json);
 }

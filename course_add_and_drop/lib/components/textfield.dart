@@ -32,8 +32,14 @@ class TextFieldComponent extends StatelessWidget {
         validator: validator,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Image.asset(assetPath, width: 15, height: 15),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          prefixIcon: Image.asset(
+            assetPath,
+            width: 15,
+            height: 15,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.grey),
