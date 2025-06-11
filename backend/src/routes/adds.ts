@@ -109,7 +109,7 @@ router.put('/:id', restrictTo('Registrar'), async (req: AuthenticatedRequest, re
     });
 });
 
-router.delete('/:id', restrictTo('Registrar'), async (req: AuthenticatedRequest, res) => {
+router.delete('/:id', restrictTo('Student'), async (req: AuthenticatedRequest, res) => {
     const { id } = req.params;
 
     const db = new sqlite3.Database('./college.db');
