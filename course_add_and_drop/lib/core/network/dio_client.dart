@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {
   static Dio get instance {
     final dio = Dio()
-      ..options.baseUrl = _getBaseUrl()
+      ..options.baseUrl = getBaseUrl()
       ..options.connectTimeout = const Duration(seconds: 30)
       ..options.receiveTimeout = const Duration(seconds: 30)
       ..options.headers = {
@@ -18,10 +19,31 @@ class DioClient {
       responseBody: true,
     ));
 
+    // Add token interceptor
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('jwt_token');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (DioException e, handler) async {
+        if (e.response?.statusCode == 401) {
+          // Token expired or invalid
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+          // You might want to add navigation logic here to redirect to login
+        }
+        return handler.next(e);
+      },
+    ));
+
     return dio;
   }
 
-  static String _getBaseUrl() {
+  static String getBaseUrl() {
     if (kIsWeb) {
       return 'http://localhost:5000/api';
     }

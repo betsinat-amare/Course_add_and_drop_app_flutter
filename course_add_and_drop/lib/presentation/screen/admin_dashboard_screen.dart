@@ -9,14 +9,13 @@ import '../../components/add_drop_component.dart' as add_drop_components;
 import 'package:flutter/foundation.dart';
 import 'package:course_add_and_drop/main.dart';
 import '../../components/footer_component.dart';
-import '../providers/admin_dashboard_provider.dart';
+import '../providers/admin_dashboared_provider.dart';
 
 class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
 
   @override
-  ConsumerState<AdminDashboardScreen> createState() =>
-      _AdminDashboardScreenState();
+  ConsumerState<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
 class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
@@ -33,7 +32,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     debugPrint('code.png: assets/code.png');
     debugPrint('description.png: assets/description.png');
     debugPrint('credit.png: assets/credit.png');
-
+    
     // Load data using Riverpod
     Future.microtask(() {
       ref.read(adminDashboardProvider.notifier).loadData();
@@ -50,14 +49,12 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       return;
     }
 
-    await ref
-        .read(adminDashboardProvider.notifier)
-        .createCourse(
-          title: _titleController.text,
-          code: _codeController.text,
-          description: _descriptionController.text,
-          creditHours: _creditHoursController.text,
-        );
+    await ref.read(adminDashboardProvider.notifier).createCourse(
+      title: _titleController.text,
+      code: _codeController.text,
+      description: _descriptionController.text,
+      creditHours: _creditHoursController.text,
+    );
 
     // Clear controllers after successful creation
     _titleController.clear();
@@ -68,9 +65,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
-    debugPrint(
-      'Clearing local SharedPreferences on logout for admin dashboard.',
-    );
+    debugPrint('Clearing local SharedPreferences on logout for admin dashboard.');
     await prefs.remove('jwt_token');
     await prefs.remove('user_role');
     await prefs.remove('user_username');
@@ -79,35 +74,23 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     await prefs.remove('user_profile_photo');
 
     authNotifier.value = false;
-    debugPrint(
-      'authNotifier set to false via admin_dashboard_screen.dart after local clear.',
-    );
+    debugPrint('authNotifier set to false via admin_dashboard_screen.dart after local clear.');
 
     if (!mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint(
-        'Navigating to /login via addPostFrameCallback from admin dashboard.',
-      );
+      debugPrint('Navigating to /login via addPostFrameCallback from admin dashboard.');
       context.go('/login');
     });
 
     Future.microtask(() async {
       try {
         await ref.read(apiServiceProvider).logout();
-        debugPrint(
-          'API Service backend logout completed from admin dashboard.',
-        );
+        debugPrint('API Service backend logout completed from admin dashboard.');
       } catch (e) {
-        debugPrint(
-          'Error during API Service backend logout from admin dashboard: $e',
-        );
+        debugPrint('Error during API Service backend logout from admin dashboard: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Backend logout failed: ${e.toString().replaceFirst('Exception: ', '')}',
-              ),
-            ),
+            SnackBar(content: Text('Backend logout failed: ${e.toString().replaceFirst('Exception: ', '')}')),
           );
         }
       }
@@ -140,7 +123,9 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     final state = ref.watch(adminDashboardProvider);
 
     if (state.isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(
@@ -177,9 +162,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          debugPrint(
-                            'Navigating to /edit-account from admin dashboard.',
-                          );
+                          debugPrint('Navigating to /edit-account from admin dashboard.');
                           context.push('/edit-account');
                         },
                         child: CircleAvatar(
@@ -193,7 +176,10 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                         children: [
                           const Text(
                             'Welcome, ',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
                           Text(
                             state.userName ?? 'Admin',
@@ -237,8 +223,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                     controller: _descriptionController,
                     label: 'Description',
                     assetPath: 'assets/description.png',
-                    validator: (value) =>
-                        value!.isEmpty ? 'Enter description' : null,
+                    validator: (value) => value!.isEmpty ? 'Enter description' : null,
                     onValueChange: (value) {},
                   ),
                   const SizedBox(height: 16),
@@ -246,8 +231,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                     controller: _creditHoursController,
                     label: 'Credit Hours',
                     assetPath: 'assets/credit.png',
-                    validator: (value) =>
-                        value!.isEmpty ? 'Enter credit hours' : null,
+                    validator: (value) => value!.isEmpty ? 'Enter credit hours' : null,
                     onValueChange: (value) {},
                   ),
                   const SizedBox(height: 30),
@@ -259,18 +243,12 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   if (state.successMessage.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        state.successMessage,
-                        style: const TextStyle(color: Colors.green),
-                      ),
+                      child: Text(state.successMessage, style: const TextStyle(color: Colors.green)),
                     ),
                   if (state.errorMessage.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        state.errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
+                      child: Text(state.errorMessage, style: const TextStyle(color: Colors.red)),
                     ),
                   const SizedBox(height: 20),
                 ],

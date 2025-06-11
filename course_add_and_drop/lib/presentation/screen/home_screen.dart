@@ -12,8 +12,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.colorGrayBackground, // Light purple background
       body: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-              color: AppColors.colorPrimary, width: 2.0), // Blue border
+          border: Border.all(color: AppColors.colorPrimary, width: 2.0), // Blue border
         ),
         child: SafeArea(
           child: Center(
@@ -34,10 +33,10 @@ class HomeScreen extends StatelessWidget {
           Add and Drop Manager App''',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color:
-                          Color.fromARGB(255, 19, 91, 208), // Dark purple text
+                      color: Color.fromARGB(255, 19, 91, 208), // Dark purple text
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -67,4 +66,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
+} 

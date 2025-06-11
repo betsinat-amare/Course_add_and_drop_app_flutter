@@ -30,9 +30,11 @@ class TextFieldComponent extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Image.asset(assetPath, width: 24, height: 24),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
       ),
     );
   }
-}
+} 

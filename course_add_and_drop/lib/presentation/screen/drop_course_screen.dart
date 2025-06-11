@@ -31,10 +31,8 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
   // Controllers for the update dialog
   final TextEditingController _editTitleController = TextEditingController();
   final TextEditingController _editCodeController = TextEditingController();
-  final TextEditingController _editDescriptionController =
-      TextEditingController();
-  final TextEditingController _editCreditHoursController =
-      TextEditingController();
+  final TextEditingController _editDescriptionController = TextEditingController();
+  final TextEditingController _editCreditHoursController = TextEditingController();
 
   @override
   void initState() {
@@ -49,9 +47,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
     final role = prefs.getString('user_role');
     setState(() {
       _userRole = role; // Assuming you save role as 'user_role'
-      debugPrint(
-        'User role loaded in DropCourseScreen: $_userRole (from SharedPreferences: $role)',
-      );
+      debugPrint('User role loaded in DropCourseScreen: $_userRole (from SharedPreferences: $role)');
     });
   }
 
@@ -66,15 +62,13 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
       setState(() {
         _allCourses = List<Map<String, dynamic>>.from(courses);
         _filteredCourses = _allCourses;
-        _approvedStudentAdds = List<Map<String, dynamic>>.from(
-          addedCourses,
-        ).where((add) => add['approval_status'] == 'approved').toList();
+        _approvedStudentAdds = List<Map<String, dynamic>>.from(addedCourses)
+            .where((add) => add['approval_status'] == 'approved')
+            .toList();
         _isLoading = false;
       });
       debugPrint('Number of courses received: ${_allCourses.length}');
-      debugPrint(
-        'Number of approved added courses received: ${_approvedStudentAdds.length}',
-      );
+      debugPrint('Number of approved added courses received: ${_approvedStudentAdds.length}');
     } catch (e) {
       debugPrint('Error fetching courses and approved adds: $e');
       setState(() {
@@ -82,21 +76,16 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
       });
       if (mounted) {
         // Check for unauthorized access and redirect to login
-        if (e.toString().contains('Unauthorized') ||
-            e.toString().contains('No token found')) {
+        if (e.toString().contains('Unauthorized') || e.toString().contains('No token found')) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Session expired or unauthorized. Please log in again.',
-              ),
-            ),
+            const SnackBar(content: Text('Session expired or unauthorized. Please log in again.')),
           );
           // Redirect to login screen
           context.go('/login');
         } else {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error loading courses: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error loading courses: $e')),
+          );
         }
       }
     }
@@ -111,12 +100,9 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
         _filteredCourses = _allCourses.where((course) {
           final title = course['title']?.toString().toLowerCase() ?? '';
           final code = course['code']?.toString().toLowerCase() ?? '';
-          final description =
-              course['description']?.toString().toLowerCase() ?? '';
+          final description = course['description']?.toString().toLowerCase() ?? '';
           final searchLower = query.toLowerCase();
-          return title.contains(searchLower) ||
-              code.contains(searchLower) ||
-              description.contains(searchLower);
+          return title.contains(searchLower) || code.contains(searchLower) || description.contains(searchLower);
         }).toList();
       }
     });
@@ -133,17 +119,14 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error deleting course: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting course: $e')),
+        );
       }
     }
   }
 
-  Future<void> _updateCourse(
-    String courseId,
-    Map<String, dynamic> updatedData,
-  ) async {
+  Future<void> _updateCourse(String courseId, Map<String, dynamic> updatedData) async {
     try {
       await _apiService.updateCourse(courseId, updatedData);
       await _fetchCoursesAndApprovedAdds();
@@ -154,9 +137,9 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error updating course: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating course: $e')),
+        );
       }
     }
   }
@@ -219,8 +202,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                 'title': _editTitleController.text.trim(),
                 'code': _editCodeController.text.trim(),
                 'description': _editDescriptionController.text.trim(),
-                'credit_hours':
-                    int.tryParse(_editCreditHoursController.text.trim()) ?? 0,
+                'credit_hours': int.tryParse(_editCreditHoursController.text.trim()) ?? 0,
               };
               _updateCourse(course['id'].toString(), updatedData);
               setState(() {
@@ -275,18 +257,13 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
     );
   }
 
-  void _showDropConfirmationDialog(
-    Map<String, dynamic> course,
-    Map<String, dynamic> approvedAddEntry,
-  ) {
+  void _showDropConfirmationDialog(Map<String, dynamic> course, Map<String, dynamic> approvedAddEntry) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) => AlertDialog(
         title: const Text('Request Drop Course'),
-        content: Text(
-          'Are you sure you want to request to drop ${course['title']}?',
-        ),
+        content: Text('Are you sure you want to request to drop ${course['title']}?'),
         actions: [
           TextButton(
             onPressed: () {
@@ -299,10 +276,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
               _requestDropCourse(approvedAddEntry['id'], course['title']);
               Navigator.of(dialogContext).pop();
             },
-            child: const Text(
-              'Request Drop',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Request Drop', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -315,11 +289,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
       await _fetchCoursesAndApprovedAdds(); // Refresh both lists
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Drop request for "$courseTitle" submitted successfully',
-            ),
-          ),
+          SnackBar(content: Text('Drop request for "$courseTitle" submitted successfully')),
         );
       }
     } catch (e) {
@@ -340,9 +310,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
         context.go('/courses/all');
         break;
       case Screen.dropCourse:
-        context.go(
-          '/drop-course',
-        ); // Already on this screen, but keeping for consistency
+        context.go('/drop-course'); // Already on this screen, but keeping for consistency
         break;
       case Screen.dashboard:
         context.go('/dashboard/user');
@@ -368,21 +336,13 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 16.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.only(
-                        top: 15.0,
-                        left: 16.0,
-                        right: 16.0,
-                        bottom: 0.0,
-                      ),
+                      padding: const EdgeInsets.only(top: 15.0, left: 16.0, right: 16.0, bottom: 0.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -406,9 +366,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                                   context.push('/edit-account');
                                 },
                                 child: const CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    'assets/profile.png',
-                                  ),
+                                  backgroundImage: AssetImage('assets/profile.png'),
                                 ),
                               ),
                             ],
@@ -423,10 +381,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                         controller: _searchController,
                         decoration: InputDecoration(
                           labelText: 'Search courses...',
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: AppColors.colorPrimary,
-                          ),
+                          prefixIcon: const Icon(Icons.search, color: AppColors.colorPrimary),
                           suffixIcon: _searchController.text.isNotEmpty
                               ? IconButton(
                                   icon: const Icon(Icons.clear),
@@ -446,16 +401,11 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: AppColors.colorPrimary,
-                            ),
+                            borderSide: const BorderSide(color: AppColors.colorPrimary),
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         ),
                         onChanged: _filterCourses,
                       ),
@@ -481,15 +431,12 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                           itemCount: _filteredCourses.length,
                           itemBuilder: (context, index) {
                             final course = _filteredCourses[index];
-                            final approvedAddEntry = _approvedStudentAdds
-                                .firstWhere(
-                                  (add) => add['course_id'] == course['id'],
-                                  orElse: () => {},
-                                );
-                            final isDroppable =
-                                approvedAddEntry.isNotEmpty &&
-                                approvedAddEntry['approval_status'] ==
-                                    'approved';
+                            final approvedAddEntry = _approvedStudentAdds.firstWhere(
+                              (add) => add['course_id'] == course['id'],
+                              orElse: () => {},
+                            );
+                            final isDroppable = approvedAddEntry.isNotEmpty &&
+                                approvedAddEntry['approval_status'] == 'approved';
 
                             return Card(
                               margin: const EdgeInsets.only(bottom: 16),
@@ -499,24 +446,18 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: text.HeadingTextComponent(
-                                            text:
-                                                course['title'] ??
-                                                'Untitled Course',
+                                            text: course['title'] ?? 'Untitled Course',
                                             color: AppColors.colorPrimary,
                                           ),
                                         ),
                                         Row(
                                           children: [
                                             IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                color: AppColors.colorPrimary,
-                                              ),
+                                              icon: const Icon(Icons.edit, color: AppColors.colorPrimary),
                                               onPressed: () {
                                                 setState(() {
                                                   _selectedCourse = course;
@@ -526,10 +467,7 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                                               },
                                             ),
                                             IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
+                                              icon: const Icon(Icons.delete, color: Colors.red),
                                               onPressed: () {
                                                 setState(() {
                                                   _courseToDelete = course;
@@ -538,51 +476,29 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) => AlertDialog(
-                                                    title: const Text(
-                                                      'Delete Course',
-                                                    ),
-                                                    content: Text(
-                                                      'Are you sure you want to delete ${course['title']}?',
-                                                    ),
+                                                    title: const Text('Delete Course'),
+                                                    content: Text('Are you sure you want to delete ${course['title']}?'),
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
                                                           setState(() {
-                                                            _showDeleteDialog =
-                                                                false;
-                                                            _courseToDelete =
-                                                                null;
+                                                            _showDeleteDialog = false;
+                                                            _courseToDelete = null;
                                                           });
-                                                          Navigator.pop(
-                                                            context,
-                                                          );
+                                                          Navigator.pop(context);
                                                         },
-                                                        child: const Text(
-                                                          'Cancel',
-                                                        ),
+                                                        child: const Text('Cancel'),
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
-                                                          _deleteCourse(
-                                                            course['id']
-                                                                .toString(),
-                                                          );
+                                                          _deleteCourse(course['id'].toString());
                                                           setState(() {
-                                                            _showDeleteDialog =
-                                                                false;
-                                                            _courseToDelete =
-                                                                null;
+                                                            _showDeleteDialog = false;
+                                                            _courseToDelete = null;
                                                           });
-                                                          Navigator.pop(
-                                                            context,
-                                                          );
+                                                          Navigator.pop(context);
                                                         },
-                                                        child: const Text(
-                                                          'Delete',
-                                                          style: TextStyle(
-                                                            color: Colors.red,
-                                                          ),
-                                                        ),
+                                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
                                                       ),
                                                     ],
                                                   ),
@@ -595,51 +511,35 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     text.NormalTextComponent(
-                                      text:
-                                          course['code'] ?? 'No code available',
+                                      text: course['code'] ?? 'No code available',
                                       color: AppColors.colorPrimary,
                                     ),
                                     const SizedBox(height: 8),
                                     text.NormalTextComponent(
-                                      text:
-                                          course['description'] ??
-                                          'No description available',
+                                      text: course['description'] ?? 'No description available',
                                       color: AppColors.colorPrimary,
                                     ),
                                     const SizedBox(height: 8),
                                     text.NormalTextComponent(
-                                      text:
-                                          'Credit Hours: ${course['credit_hours'] ?? 'N/A'}',
+                                      text: 'Credit Hours: ${course['credit_hours'] ?? 'N/A'}',
                                       color: AppColors.colorPrimary,
                                     ),
                                     const SizedBox(height: 8),
                                     if (_userRole != 'Registrar')
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
                                           OutlinedButton(
                                             onPressed: isDroppable
-                                                ? () =>
-                                                      _showDropConfirmationDialog(
-                                                        course,
-                                                        approvedAddEntry,
-                                                      )
+                                                ? () => _showDropConfirmationDialog(course, approvedAddEntry)
                                                 : null,
                                             style: OutlinedButton.styleFrom(
-                                              side: const BorderSide(
-                                                color: AppColors.colorPrimary,
-                                              ),
+                                              side: const BorderSide(color: AppColors.colorPrimary),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
+                                                borderRadius: BorderRadius.circular(8),
                                               ),
                                             ),
-                                            child: Text(
-                                              isDroppable
-                                                  ? 'Request Drop'
-                                                  : 'Not Droppable',
-                                            ),
+                                            child: Text(isDroppable ? 'Request Drop' : 'Not Droppable'),
                                           ),
                                         ],
                                       ),
@@ -688,4 +588,4 @@ class _DropCourseScreenState extends State<DropCourseScreen> {
     _editCreditHoursController.dispose();
     super.dispose();
   }
-}
+} 

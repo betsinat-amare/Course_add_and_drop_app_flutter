@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../services/auth_services.dart';
+import 'package:course_add_and_drop/services/auth_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:course_add_and_drop/components/add_drop_component.dart' as add_drop_components;
 import '../../components/button_component.dart' as button;

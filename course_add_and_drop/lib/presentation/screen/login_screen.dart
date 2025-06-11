@@ -5,7 +5,7 @@ import 'package:course_add_and_drop/components/add_drop_component.dart';
 import 'package:flutter/foundation.dart';
 import '../../services/api_service.dart';
 import '../../components/button_component.dart' as button;
-import '../../components/clickable_login.dart' as login;
+import '../../components/clikable-login.dart' as login;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:course_add_and_drop/main.dart'; // Import main.dart to access global authNotifier
 
@@ -42,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
         _usernameController.text,
         _passwordController.text,
       );
-
+      
       if (!mounted) return;
-
+      
       final role = response['role'] as String?;
       final username = response['username'] as String?;
       debugPrint('Login successful, role: $role, username: $username');
@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
       final savedRole = prefs.getString('user_role');
-
+      
       debugPrint('Stored token: $token');
       debugPrint('Stored role: $savedRole');
 
@@ -116,8 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 60.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 60.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -125,25 +124,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const HeadingTextComponent(value: 'Access Account'),
                       const SizedBox(height: 10),
-                      const NormalTextComponent(
-                          value: 'Access your course with ease'),
+                      const NormalTextComponent(value: 'Access your course with ease'),
                       const SizedBox(height: 25),
                       TextFieldComponent(
                         controller: _usernameController,
                         label: 'Username',
                         assetPath: 'assets/profile.png',
-                        validator: (value) =>
-                            value!.isEmpty ? 'Enter username' : null,
+                        validator: (value) => value!.isEmpty ? 'Enter username' : null,
                       ),
                       PasswordTextFieldComponent(
                         controller: _passwordController,
                         label: 'Password',
                         assetPath: 'assets/password.png',
                         isVisible: _isPasswordVisible,
-                        onVisibilityToggle: () => setState(
-                            () => _isPasswordVisible = !_isPasswordVisible),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Enter password' : null,
+                        onVisibilityToggle: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                        validator: (value) => value!.isEmpty ? 'Enter password' : null,
                       ),
                       const SizedBox(height: 15),
                       Align(
@@ -166,8 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         isEnabled: !_isLoading,
                       ),
                       const SizedBox(height: 15),
-                      const NormalTextComponent(
-                          value: 'Need to create an account?'),
+                      const NormalTextComponent(value: 'Need to create an account?'),
                       login.ClickableLoginTextComponent(
                         onTextSelected: () {
                           debugPrint('Navigating to /signup');

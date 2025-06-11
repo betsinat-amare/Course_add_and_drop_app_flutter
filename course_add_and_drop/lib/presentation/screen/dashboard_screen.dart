@@ -249,6 +249,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey, width: 2),
                                   color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
                                   children: [
@@ -289,50 +290,46 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                                       ),
                                     ),
                                     // Table Data
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: _adds.length,
-                                      itemBuilder: (context, index) {
-                                        final add = _adds[index];
-                                        final courseTitle = _getCourseTitle(add['course_id']);
-                                        final courseCode = _getCourseCode(add['course_id']);
-                                        final status = add['approval_status']?.toString().toUpperCase() ?? 'N/A';
-                                        final approvalId = add['id']?.toString() ?? 'N/A';
+                                    if (_adds.isEmpty)
+                                      const Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Text('No courses added yet'),
+                                      )
+                                    else
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: _adds.length,
+                                        itemBuilder: (context, index) {
+                                          final add = _adds[index];
+                                          final courseTitle = _getCourseTitle(add['course_id']);
+                                          final courseCode = _getCourseCode(add['course_id']);
+                                          final status = add['approval_status']?.toString().toUpperCase() ?? 'N/A';
 
-                                        return Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: index == _adds.length - 1 ? Colors.transparent : Colors.grey.shade300,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  courseTitle,
-                                                  textAlign: TextAlign.center,
+                                          return Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                  color: index == _adds.length - 1 ? Colors.transparent : Colors.grey.shade300,
                                                 ),
                                               ),
-                                              if (_currentHeaderSet == 0)
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    courseTitle,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
                                                 Expanded(
                                                   child: Text(
                                                     courseCode,
                                                     textAlign: TextAlign.center,
                                                   ),
-                                                )
-                                              else
-                                                Expanded(
-                                                  child: Text(
-                                                    status,
-                                                    textAlign: TextAlign.center,
-                                                  ),
                                                 ),
-                                              if (_currentHeaderSet == 0)
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -353,38 +350,13 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                                                         ),
                                                     ],
                                                   ),
-                                                )
-                                              else
-                                                Expanded(
-                                                  child: Text(
-                                                    approvalId,
-                                                    textAlign: TextAlign.center,
-                                                  ),
                                                 ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
                                   ],
-                                ),
-                              ),
-                            ),
-                            // Switch View Button (moved outside table)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0, top: 8.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: IconButton(
-                                  icon: Icon(
-                                    _currentHeaderSet == 0 ? Icons.arrow_forward : Icons.arrow_back,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _currentHeaderSet = (_currentHeaderSet + 1) % 2;
-                                    });
-                                  },
                                 ),
                               ),
                             ),

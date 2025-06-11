@@ -15,4 +15,4 @@ class NormalTextComponent extends StatelessWidget {
       ),
     );
   }
-}
+} 

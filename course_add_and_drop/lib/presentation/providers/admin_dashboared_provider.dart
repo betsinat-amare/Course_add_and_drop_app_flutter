@@ -55,7 +55,7 @@ class AdminDashboardNotifier extends StateNotifier<AdminDashboardState> {
     try {
       final user = await _apiService.getUserProfile();
       final adds = await _apiService.getAdds();
-
+      
       state = state.copyWith(
         adminName: user.fullName,
         adds: adds,
@@ -76,12 +76,8 @@ class AdminDashboardNotifier extends StateNotifier<AdminDashboardState> {
     required String creditHours,
   }) async {
     try {
-      state = state.copyWith(
-        isLoading: true,
-        errorMessage: '',
-        successMessage: '',
-      );
-
+      state = state.copyWith(isLoading: true, errorMessage: '', successMessage: '');
+      
       final response = await _apiService.createCourse(
         title: title,
         code: code,
@@ -103,18 +99,21 @@ class AdminDashboardNotifier extends StateNotifier<AdminDashboardState> {
 
   Future<void> loadUserRole() async {
     final prefs = await SharedPreferences.getInstance();
-    state = state.copyWith(userRole: prefs.getString('user_role'));
+    state = state.copyWith(
+      userRole: prefs.getString('user_role'),
+    );
   }
 
   Future<void> loadUserName() async {
     final prefs = await SharedPreferences.getInstance();
-    state = state.copyWith(userName: prefs.getString('user_name'));
+    state = state.copyWith(
+      userName: prefs.getString('user_name'),
+    );
   }
 }
 
 final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
 
-final adminDashboardProvider =
-    StateNotifierProvider<AdminDashboardNotifier, AdminDashboardState>((ref) {
-      return AdminDashboardNotifier(ref.read(apiServiceProvider));
-    });
+final adminDashboardProvider = StateNotifierProvider<AdminDashboardNotifier, AdminDashboardState>((ref) {
+  return AdminDashboardNotifier(ref.read(apiServiceProvider));
+}); 
