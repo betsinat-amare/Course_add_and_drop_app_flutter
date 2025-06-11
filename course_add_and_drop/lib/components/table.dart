@@ -110,13 +110,22 @@ class _SwitchableTableViewState extends State<SwitchableTableView> {
               itemBuilder: (context, index) {
                 final item = displayData[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(child: Text(item.$1, textAlign: TextAlign.center)),
-                      Expanded(child: Text(item.$2, textAlign: TextAlign.center)),
-                      Expanded(child: Text(item.$3, textAlign: TextAlign.center)),
+                      Expanded(
+                        child: Text(item.$1, textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        child: Text(item.$2, textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        child: Text(item.$3, textAlign: TextAlign.center),
+                      ),
                     ],
                   ),
                 );
@@ -134,7 +143,9 @@ class _SwitchableTableViewState extends State<SwitchableTableView> {
                   });
                 },
                 icon: Icon(
-                  _currentHeaderSet == 0 ? Icons.arrow_forward : Icons.arrow_back,
+                  _currentHeaderSet == 0
+                      ? Icons.arrow_forward
+                      : Icons.arrow_back,
                   color: Colors.black,
                 ),
               ),
@@ -182,10 +193,7 @@ class ButtonComponent extends StatelessWidget {
         ),
         child: Text(
           value,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),
     );
